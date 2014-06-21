@@ -4,9 +4,9 @@
 
 ## Sample GET Request
 ```swift
-var request = SwiftRequest()
+var swiftRequest = SwiftRequest()
 
-request.get(url: "http://news.ycombinator.com", {err, response, body in
+swiftRequest.get(url: "http://news.ycombinator.com", {err, response, body in
                 if( !err ) { 
                   println(body)
                 }
@@ -15,7 +15,7 @@ request.get(url: "http://news.ycombinator.com", {err, response, body in
 
 ## Sample POST Request
 ```swift
-var request = SwiftRequest()
+var swiftRequest = SwiftRequest()
 
 var data = [
     "Name" : "Ricky",
@@ -23,7 +23,7 @@ var data = [
     "Age" : "29"
 ]
 
-request.post("http://requestb.in/ukfc8euk", payload: data, {err, response, body in
+swiftRequest.post("http://requestb.in/ukfc8euk", payload: data, {err, response, body in
         if( !err ) {
             println(body)
         }

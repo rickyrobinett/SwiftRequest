@@ -12,23 +12,27 @@ class SwiftRequest {
     var session = NSURLSession.sharedSession()
     
     init() {
+        // we should probably be preparing something here...
     }
     
     // Do these convenience methods even make sense? I don't think we need them
     convenience init(url: String) {
         self.init()
-        makeRequest(["url" : url ] )
+        request(["url" : url ] )
     }
     
     convenience init(url: String, callback: (err: NSError?, response: AnyObject?, body: AnyObject?)->()) {
         self.init()
-        makeRequest(["url" : url ], callback: callback )
+        request(["url" : url ], callback: callback )
     }
     
+    // GET requests
     func get(url: String, callback: (err: NSError?, response: AnyObject?, body: AnyObject?)->()) {
-        makeRequest(["url" : url ], callback: callback )
+        request(["url" : url ], callback: callback )
     }
     
+    
+    // POST requests
     func post(url: String, callback: (err: NSError?, response: AnyObject?, body: AnyObject?)->()) {
         post(url, payload: Dictionary(), callback)
     }
@@ -38,7 +42,7 @@ class SwiftRequest {
         for (key, value) in payload {
             qs += "\(key)=\(value)&"
         }
-        makeRequest(["url": url, "method" : "POST", "body" : qs] , callback)
+        request(["url": url, "method" : "POST", "body" : qs] , callback)
     }
     
     func post(url: String, payload: Dictionary<String, String>, auth: Dictionary<String, String>, callback: (err: NSError?, response: AnyObject?, body: AnyObject?)->()) {
@@ -46,10 +50,12 @@ class SwiftRequest {
         for (key, value) in payload {
             qs += "\(key)=\(value)&"
         }
-        makeRequest(["url": url, "method" : "POST", "body" : qs, "auth" : auth] , callback)
+        request(["url": url, "method" : "POST", "body" : qs, "auth" : auth] , callback)
     }
     
-    func makeRequest(options: Dictionary<String, Any>, callback: ((err: NSError?, response: NSURLResponse?, body: AnyObject?)->())?) {
+    
+    // Actually make the requests
+    func request(options: Dictionary<String, Any>, callback: ((err: NSError?, response: NSURLResponse?, body: AnyObject?)->())?) {
         if( !options["url"] ) { return }
         var url = NSURL.URLWithString(options["url"] as String)
         var urlRequest = NSMutableURLRequest(URL: url)
@@ -82,9 +88,8 @@ class SwiftRequest {
         task.resume()
     }
     
-    func makeRequest(options: Dictionary<String, Any>) {
-        makeRequest(options, callback: nil)
+    func request(options: Dictionary<String, Any>) {
+        request(options, callback: nil)
     }
 
 }
-
