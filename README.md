@@ -40,7 +40,9 @@ swiftRequest.get("http://pokeapi.co/api/v1/pokemon/", params: ["limit":"5"], cal
 #### GET Request with Authentication
 ```swift
 swiftRequest.get("https://api.github.com/user", auth: ["username" : "user", "password" : "pass"],callback: {err, response, body in
-println(body)
+    if( !err ) {
+        println(body)
+    }
 })
 
 ```
