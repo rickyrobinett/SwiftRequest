@@ -25,9 +25,9 @@ class SwiftRequest {
     }
     
     // POST requests
-    func post(url: String, payload: Dictionary<String, String> = Dictionary<String, String>(), auth: Dictionary<String, String> = Dictionary<String, String>(), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
+    func post(url: String, data: Dictionary<String, String> = Dictionary<String, String>(), auth: Dictionary<String, String> = Dictionary<String, String>(), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         var qs = ""
-        for (key, value) in payload {
+        for (key, value) in data {
             qs += "\(key)=\(value)&"
         }
         request(["url": url, "method" : "POST", "body" : qs, "auth" : auth] , callback)

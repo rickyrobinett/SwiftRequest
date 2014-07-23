@@ -58,7 +58,7 @@ var data = [
     "Age" : "29"
 ]
 
-swiftRequest.post("http://requestb.in/ukfc8euk", payload: data, callback: {err, response, body in
+swiftRequest.post("http://requestb.in/ukfc8euk", data: data, callback: {err, response, body in
   if( !err ) {
     println(body)
   }
