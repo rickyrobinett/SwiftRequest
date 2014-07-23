@@ -71,9 +71,11 @@ class SwiftRequest {
         
         let task = session.dataTaskWithRequest(urlRequest, completionHandler: {body, response, err in
             // this is lame but want to not always send back NSData. Is it reasonable to intelligent about MIME types and send back a string when it makes sense?
-            if(response.MIMEType == "text/html" || response.MIMEType == "application/json" ) {
-                var bodyStr = NSString(data: body, encoding:NSUTF8StringEncoding)
-                return callback!(err: err, response: response, body: bodyStr)
+            if( !err ) {
+                if(response.MIMEType == "text/html" || response.MIMEType == "application/json" ) {
+                    var bodyStr = NSString(data: body, encoding:NSUTF8StringEncoding)
+                    return callback!(err: err, response: response, body: bodyStr)
+                }
             }
             
             callback!(err: err, response: response, body: body)
