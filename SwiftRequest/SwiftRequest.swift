@@ -16,7 +16,7 @@ class SwiftRequest {
     }
     
     // GET requests
-    func get(url: String, auth: Dictionary<String, String> = Dictionary<String, String>(), params: Dictionary<String, String> = Dictionary<String, String>(), callback: ((err: NSError?, response: NSURLResponse?, body: AnyObject?)->())? = nil) {
+    func get(url: String, auth: Dictionary<String, String> = Dictionary<String, String>(), params: Dictionary<String, String> = Dictionary<String, String>(), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         var qs = ""
         for (key, value) in params {
             qs += "\(key)=\(value)&"
@@ -25,7 +25,7 @@ class SwiftRequest {
     }
     
     // POST requests
-    func post(url: String, payload: Dictionary<String, String> = Dictionary<String, String>(), auth: Dictionary<String, String> = Dictionary<String, String>(), callback: ((err: NSError?, response: NSURLResponse?, body: AnyObject?)->())? = nil) {
+    func post(url: String, payload: Dictionary<String, String> = Dictionary<String, String>(), auth: Dictionary<String, String> = Dictionary<String, String>(), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         var qs = ""
         for (key, value) in payload {
             qs += "\(key)=\(value)&"
@@ -34,7 +34,7 @@ class SwiftRequest {
     }
     
     // Actually make the requests
-    func request(options: Dictionary<String, Any>, callback: ((err: NSError?, response: NSURLResponse?, body: AnyObject?)->())?) {
+    func request(options: Dictionary<String, Any>, callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())?) {
         if( !options["url"] ) { return }
         
         var urlString = options["url"] as String
@@ -71,20 +71,21 @@ class SwiftRequest {
         
         let task = session.dataTaskWithRequest(urlRequest, completionHandler: {body, response, err in
             // this is lame but want to not always send back NSData. Is it reasonable to intelligent about MIME types and send back a string when it makes sense?
+            var resp = response as NSHTTPURLResponse
             if( !err ) {
                 if(response.MIMEType == "text/html" || response.MIMEType == "application/json" ) {
                     var bodyStr = NSString(data: body, encoding:NSUTF8StringEncoding)
-                    return callback!(err: err, response: response, body: bodyStr)
+                    return callback!(err: err, response: resp, body: bodyStr)
                 }
             }
             
-            callback!(err: err, response: response, body: body)
+            callback!(err: err, response: resp, body: body)
         })
         
         task.resume()
     }
     
-    func request(url: String, callback: ((err: NSError?, response: NSURLResponse?, body: AnyObject?)->())? = nil) {
+    func request(url: String, callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         request(["url" : url ], callback: callback )
     }
 
