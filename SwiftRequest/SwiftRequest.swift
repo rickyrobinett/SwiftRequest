@@ -16,25 +16,19 @@ class SwiftRequest {
     }
     
     // GET requests
-    func get(url: String, auth: Dictionary<String, String> = Dictionary<String, String>(), params: Dictionary<String, String> = Dictionary<String, String>(), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
-        var qs = ""
-        for (key, value) in params {
-            qs += "\(key)=\(value)&"
-        }
+    public func get(url: String, auth: [String: String] = [String: String](), params: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
+        var qs = dictToQueryString(params)
         request(["url" : url, "auth" : auth, "querystring": qs ], callback: callback )
     }
     
     // POST requests
-    func post(url: String, data: Dictionary<String, String> = Dictionary<String, String>(), auth: Dictionary<String, String> = Dictionary<String, String>(), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
-        var qs = ""
-        for (key, value) in data {
-            qs += "\(key)=\(value)&"
-        }
+    public func post(url: String, data: [String: String] = [String: String](), auth: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
+        var qs = dictToQueryString(data)
         request(["url": url, "method" : "POST", "body" : qs, "auth" : auth] , callback)
     }
     
     // Actually make the requests
-    func request(options: Dictionary<String, Any>, callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())?) {
+    public func request(options: [String: Any], callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())?) {
         if( !options["url"] ) { return }
         
         var urlString = options["url"] as String
@@ -57,8 +51,8 @@ class SwiftRequest {
         }
         
         // is there a more efficient way to do this?
-        if( options["auth"] && (options["auth"] as Dictionary<String,String>).count > 0) {
-            var auth = options["auth"] as Dictionary<String,String>
+        if( options["auth"] && (options["auth"] as [String: String]).count > 0) {
+            var auth = options["auth"] as [String: String]
             if( auth["username"] && auth["password"] ) {
                 var username = auth["username"]
                 var password = auth["password"]
@@ -85,8 +79,15 @@ class SwiftRequest {
         task.resume()
     }
     
-    func request(url: String, callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
+    public func request(url: String, callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         request(["url" : url ], callback: callback )
     }
 
+    private func dictToQueryString(data: [String: String]) -> String {
+        var qs = ""
+        for (key, value) in data {
+            qs += "\(key)=\(value)&"
+        }
+        return qs
+    }
 }
