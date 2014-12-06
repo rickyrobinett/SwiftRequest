@@ -7,7 +7,7 @@ SwiftRequest is a simple HTTP client for Swift. It was inspired by the [Node.js 
 var swiftRequest = SwiftRequest()
 
 swiftRequest.get(url: "https://en.wikipedia.org/wiki/Brooklyn", callback: {err, response, body in
-  if( !err ) {
+  if( err == nil ) {
     println(body)
   }
 })
@@ -22,7 +22,7 @@ swiftRequest.get(url: "https://en.wikipedia.org/wiki/Brooklyn", callback: {err, 
 var swiftRequest = SwiftRequest()
 
 swiftRequest.get(url: "http://news.ycombinator.com", callback: {err, response, body in
-  if( !err ) { 
+  if( err == nil ) { 
     println(body)
   }
 })
@@ -31,7 +31,7 @@ swiftRequest.get(url: "http://news.ycombinator.com", callback: {err, response, b
 #### GET Request with Parameters
 ```swift
 swiftRequest.get("http://pokeapi.co/api/v1/pokemon/", params: ["limit":"5"], callback: {err, response, body in
-  if( !err ) {
+  if( err == nil ) {
     println(body)
   }
 })
@@ -40,7 +40,7 @@ swiftRequest.get("http://pokeapi.co/api/v1/pokemon/", params: ["limit":"5"], cal
 #### GET Request with Authentication
 ```swift
 swiftRequest.get("https://api.github.com/user", auth: ["username" : "user", "password" : "pass"],callback: {err, response, body in
-    if( !err ) {
+    if( err == nil ) {
         println(body)
     }
 })
@@ -59,7 +59,7 @@ var data = [
 ]
 
 swiftRequest.post("http://requestb.in/ukfc8euk", data: data, callback: {err, response, body in
-  if( !err ) {
+  if( err == nil ) {
     println(body)
   }
 })

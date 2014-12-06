@@ -29,36 +29,36 @@ class SwiftRequest {
     
     // Actually make the requests
     public func request(options: [String: Any], callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())?) {
-        if( !options["url"] ) { return }
+        if( options["url"] == nil ) { return }
         
         var urlString = options["url"] as String
-        if( options["querystring"] && (options["querystring"] as String) != "" ) {
+        if( options["querystring"] != nil && (options["querystring"] as String) != "" ) {
             var qs = options["querystring"] as String
             urlString = "\(urlString)?\(qs)"
         }
         
-        var url = NSURL.URLWithString(urlString)
-        var urlRequest = NSMutableURLRequest(URL: url)
+        var url = NSURL(string:urlString)
+        var urlRequest = NSMutableURLRequest(URL: url!)
         
-        if( options["method"]) {
+        if( options["method"] != nil) {
             urlRequest.HTTPMethod = options["method"] as String
         }
         
-        if( options["body"] && options["body"] as String != "" ) {
+        if( options["body"] != nil && options["body"] as String != "" ) {
             var postData = (options["body"] as String).dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)
             urlRequest.HTTPBody = postData
             urlRequest.setValue("\(postData!.length)", forHTTPHeaderField: "Content-length")
         }
         
         // is there a more efficient way to do this?
-        if( options["auth"] && (options["auth"] as [String: String]).count > 0) {
+        if( options["auth"] != nil && (options["auth"] as [String: String]).count > 0) {
             var auth = options["auth"] as [String: String]
-            if( auth["username"] && auth["password"] ) {
+            if( auth["username"] != nil && auth["password"] != nil ) {
                 var username = auth["username"]
                 var password = auth["password"]
-                var authEncoded = "\(username!):\(password!)".dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.fromRaw(0)!)
+                var authEncoded = "\(username!):\(password!)".dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros);
                 println(authEncoded)
-                var authValue = "Basic \(authEncoded!)"
+                var authValue = "Basic \(authEncoded)"
                 urlRequest.setValue(authValue, forHTTPHeaderField: "Authorization")
             }
         }
@@ -66,7 +66,7 @@ class SwiftRequest {
         let task = session.dataTaskWithRequest(urlRequest, completionHandler: {body, response, err in
             // this is lame but want to not always send back NSData. Is it reasonable to intelligent about MIME types and send back a string when it makes sense?
             var resp = response as NSHTTPURLResponse
-            if( !err ) {
+            if( err == nil) {
                 if(response.MIMEType == "text/html" || response.MIMEType == "application/json" ) {
                     var bodyStr = NSString(data: body, encoding:NSUTF8StringEncoding)
                     return callback!(err: err, response: resp, body: bodyStr)
