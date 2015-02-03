@@ -6,7 +6,7 @@ SwiftRequest is a simple HTTP client for Swift. It was inspired by the [Node.js 
 ```swift
 var swiftRequest = SwiftRequest()
 
-swiftRequest.get(url: "https://en.wikipedia.org/wiki/Brooklyn", callback: {err, response, body in
+swiftRequest.get("https://en.wikipedia.org/wiki/Brooklyn", callback: {err, response, body in
   if( err == nil ) {
     println(body)
   }
@@ -25,7 +25,7 @@ Drop the SwiftRequest folder into your Xcode project.
 ```swift
 var swiftRequest = SwiftRequest()
 
-swiftRequest.get(url: "http://news.ycombinator.com", callback: {err, response, body in
+swiftRequest.get("http://news.ycombinator.com", callback: {err, response, body in
   if( err == nil ) { 
     println(body)
   }

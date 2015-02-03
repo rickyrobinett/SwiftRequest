@@ -8,21 +8,21 @@
 
 import Foundation
 
-class SwiftRequest {
+public class SwiftRequest {
     var session = NSURLSession.sharedSession()
     
-    init() {
+    public init() {
         // we should probably be preparing something here...
     }
     
     // GET requests
-    func get(url: String, auth: [String: String] = [String: String](), params: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
+    public func get(url: String, auth: [String: String] = [String: String](), params: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         var qs = dictToQueryString(params)
         request(["url" : url, "auth" : auth, "querystring": qs ], callback: callback )
     }
     
     // POST requests
-    func post(url: String, data: [String: String] = [String: String](), auth: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
+    public func post(url: String, data: [String: String] = [String: String](), auth: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         var qs = dictToQueryString(data)
         request(["url": url, "method" : "POST", "body" : qs, "auth" : auth] , callback)
     }
