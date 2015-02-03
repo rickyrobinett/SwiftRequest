@@ -1,5 +1,4 @@
 # SwiftRequest
-============
 
 SwiftRequest is a simple HTTP client for Swift. It was inspired by the [Node.js Request library](https://github.com/mikeal/request) and [Python Requests](http://docs.python-requests.org/en/latest/).
 
@@ -13,11 +12,40 @@ swiftRequest.get("https://en.wikipedia.org/wiki/Brooklyn", callback: {err, respo
 })
 ```
 
-## Getting Started
+## Installation
 
-### Installation
+### Manual 
 
 Drop the SwiftRequest folder into your Xcode project.
+
+### CocoaPods
+
+You can install SwiftRequest using [CocoaPods](http://cocoapods.org/).
+
+Swift support is currently part of CocoaPods 0.36 beta. You can install it using the following command:
+```
+gem install cocoapods --pre
+```
+
+Add SwiftRequest to your Podfile:
+```
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+
+pod 'SwiftRequest', '0.0.3'
+```
+
+Install it by running:
+```
+pod install
+```
+
+Make sure you import SwiftRequest into any Swift files you're using it in with:
+```
+import SwiftRequest
+```
+
+## Getting Started
 
 ### GET Requests
 
