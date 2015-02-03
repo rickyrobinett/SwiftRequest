@@ -15,6 +15,10 @@ swiftRequest.get(url: "https://en.wikipedia.org/wiki/Brooklyn", callback: {err, 
 
 ## Getting Started
 
+### Installation
+
+Drop the SwiftRequest folder into your Xcode project.
+
 ### GET Requests
 
 #### Simple GET Request

@@ -3,7 +3,7 @@
 //  SwiftRequestTest
 //
 //  Created by Ricky Robinett on 6/20/14.
-//  Copyright (c) 2014 Ricky Robinett. All rights reserved.
+//  Copyright (c) 2015 Ricky Robinett. All rights reserved.
 //
 
 import Foundation
@@ -16,19 +16,19 @@ class SwiftRequest {
     }
     
     // GET requests
-    public func get(url: String, auth: [String: String] = [String: String](), params: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
+    func get(url: String, auth: [String: String] = [String: String](), params: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         var qs = dictToQueryString(params)
         request(["url" : url, "auth" : auth, "querystring": qs ], callback: callback )
     }
     
     // POST requests
-    public func post(url: String, data: [String: String] = [String: String](), auth: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
+    func post(url: String, data: [String: String] = [String: String](), auth: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         var qs = dictToQueryString(data)
         request(["url": url, "method" : "POST", "body" : qs, "auth" : auth] , callback)
     }
     
     // Actually make the requests
-    public func request(options: [String: Any], callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())?) {
+    func request(options: [String: Any], callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())?) {
         if( options["url"] == nil ) { return }
         
         var urlString = options["url"] as String
@@ -73,13 +73,13 @@ class SwiftRequest {
                 }
             }
             
-            callback!(err: err, response: resp, body: body)
+            return callback!(err: err, response: resp, body: body)
         })
         
         task.resume()
     }
     
-    public func request(url: String, callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
+    func request(url: String, callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         request(["url" : url ], callback: callback )
     }
 
