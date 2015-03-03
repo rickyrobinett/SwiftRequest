@@ -27,7 +27,7 @@ public class SwiftRequest {
         request(["url": url, "method" : "POST", "body" : qs, "auth" : auth] , callback)
     }
     
-    // Actually make the requests
+    // Actually make the request
     func request(options: [String: Any], callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())?) {
         if( options["url"] == nil ) { return }
         
@@ -64,12 +64,16 @@ public class SwiftRequest {
         }
         
         let task = session.dataTaskWithRequest(urlRequest, completionHandler: {body, response, err in
-            // this is lame but want to not always send back NSData. Is it reasonable to intelligent about MIME types and send back a string when it makes sense?
-            var resp = response as NSHTTPURLResponse
+            var resp = response as NSHTTPURLResponse?
+            
             if( err == nil) {
-                if(response.MIMEType == "text/html" || response.MIMEType == "application/json" ) {
+                if(response.MIMEType == "text/html") {
                     var bodyStr = NSString(data: body, encoding:NSUTF8StringEncoding)
                     return callback!(err: err, response: resp, body: bodyStr)
+                } else if(response.MIMEType == "application/json") {
+                    var localError: NSError?
+                    var json: AnyObject! = NSJSONSerialization.JSONObjectWithData(body! as NSData, options: NSJSONReadingOptions.MutableContainers, error: &localError)
+                    return callback!(err: err, response: resp, body: json);
                 }
             }
             
@@ -84,10 +88,21 @@ public class SwiftRequest {
     }
 
     private func dictToQueryString(data: [String: String]) -> String {
+
         var qs = ""
         for (key, value) in data {
-            qs += "\(key)=\(value)&"
+            let encodedKey = encode(key)
+            let encodedValue = encode(value)
+            qs += "\(encodedKey)=\(encodedValue)&"
         }
         return qs
+    }
+    
+    private func encode(value: String) -> String {
+        let queryCharacters =  NSCharacterSet(charactersInString:" =\"#%/<>?@\\^`{}[]|&+").invertedSet
+        
+        let encodedValue:String = value.stringByAddingPercentEncodingWithAllowedCharacters(queryCharacters)!
+        
+        return encodedValue
     }
 }
