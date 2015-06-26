@@ -24,16 +24,16 @@ public class SwiftRequest {
     // POST requests
     public func post(url: String, data: [String: String] = [String: String](), auth: [String: String] = [String: String](), callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())? = nil) {
         var qs = dictToQueryString(data)
-        request(["url": url, "method" : "POST", "body" : qs, "auth" : auth] , callback)
+        request(["url": url, "method" : "POST", "body" : qs, "auth" : auth] , callback: callback)
     }
     
     // Actually make the request
     func request(options: [String: Any], callback: ((err: NSError?, response: NSHTTPURLResponse?, body: AnyObject?)->())?) {
         if( options["url"] == nil ) { return }
         
-        var urlString = options["url"] as String
-        if( options["querystring"] != nil && (options["querystring"] as String) != "" ) {
-            var qs = options["querystring"] as String
+        var urlString = options["url"] as! String
+        if( options["querystring"] != nil && (options["querystring"] as! String) != "" ) {
+            var qs = options["querystring"] as! String
             urlString = "\(urlString)?\(qs)"
         }
         
@@ -41,18 +41,18 @@ public class SwiftRequest {
         var urlRequest = NSMutableURLRequest(URL: url!)
         
         if( options["method"] != nil) {
-            urlRequest.HTTPMethod = options["method"] as String
+            urlRequest.HTTPMethod = options["method"] as! String
         }
         
-        if( options["body"] != nil && options["body"] as String != "" ) {
-            var postData = (options["body"] as String).dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)
+        if( options["body"] != nil && options["body"] as! String != "" ) {
+            var postData = (options["body"] as! String).dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)
             urlRequest.HTTPBody = postData
             urlRequest.setValue("\(postData!.length)", forHTTPHeaderField: "Content-length")
         }
         
         // is there a more efficient way to do this?
-        if( options["auth"] != nil && (options["auth"] as [String: String]).count > 0) {
-            var auth = options["auth"] as [String: String]
+        if( options["auth"] != nil && (options["auth"] as! [String: String]).count > 0) {
+            var auth = options["auth"] as! [String: String]
             if( auth["username"] != nil && auth["password"] != nil ) {
                 var username = auth["username"]
                 var password = auth["password"]
@@ -64,7 +64,7 @@ public class SwiftRequest {
         }
         
         let task = session.dataTaskWithRequest(urlRequest, completionHandler: {body, response, err in
-            var resp = response as NSHTTPURLResponse?
+            var resp = response as! NSHTTPURLResponse?
             
             if( err == nil) {
                 if(response.MIMEType == "text/html") {
